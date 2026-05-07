@@ -1,0 +1,1861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grand Synthesis — Domain 9 | Digital Archive & Web Synthesis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0e0c0a;
+  --paper: #faf7f2;
+  --gold: #b8963e;
+  --gold-light: #e8c96a;
+  --gold-dim: #6b5623;
+  --rust: #8b3a1e;
+  --teal: #1a5c52;
+  --teal-light: #2e9e8a;
+  --muted: #7a7060;
+  --border: #d4c9b0;
+  --border-dark: #3a3228;
+  --bg-card: #f5f0e8;
+  --bg-dark: #141210;
+  --accent-purple: #4a3060;
+  --accent-blue: #1e3a5f;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── DECORATIVE BACKGROUND ─── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 40% at 50% 0%, rgba(184,150,62,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 60% at 0% 50%, rgba(26,92,82,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 60% at 100% 80%, rgba(74,48,96,0.04) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── HEADER ─── */
+header {
+  position: relative;
+  z-index: 10;
+  background: var(--bg-dark);
+  color: var(--paper);
+  padding: 0;
+  overflow: hidden;
+}
+
+header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(184,150,62,0.08) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(184,150,62,0.04) 40px);
+}
+
+.header-inner {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3.5rem 2rem 3rem;
+}
+
+.header-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.header-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  background: linear-gradient(135deg, #faf7f2 0%, var(--gold-light) 50%, #faf7f2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+}
+
+.header-subtitle {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.85rem, 1.8vw, 1.05rem);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: var(--gold-dim);
+  margin-bottom: 1.5rem;
+}
+
+.header-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(184,150,62,0.3);
+}
+
+.meta-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 300;
+  color: rgba(250,247,242,0.6);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.meta-pill span {
+  color: var(--gold-light);
+  font-weight: 400;
+}
+
+.header-gold-line {
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent);
+}
+
+/* ─── SEARCH BAR ─── */
+.search-wrap {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(250,247,242,0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 2rem;
+}
+
+.search-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.search-input {
+  flex: 1;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  font-style: italic;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border);
+  background: white;
+  color: var(--ink);
+  outline: none;
+  border-radius: 2px;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus { border-color: var(--gold); }
+.search-input::placeholder { color: var(--muted); }
+
+.search-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* ─── NAV TABS ─── */
+.nav-tabs {
+  position: sticky;
+  top: 57px;
+  z-index: 90;
+  background: var(--bg-dark);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.nav-tabs::-webkit-scrollbar { display: none; }
+
+.nav-tabs-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  padding: 0 2rem;
+}
+
+.nav-tab {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(250,247,242,0.45);
+  padding: 0.85rem 1.2rem;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s;
+  text-decoration: none;
+  display: block;
+}
+.nav-tab:hover { color: rgba(250,247,242,0.8); }
+.nav-tab.active { color: var(--gold-light); border-bottom-color: var(--gold); }
+
+/* ─── MAIN LAYOUT ─── */
+main {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2rem 6rem;
+}
+
+/* ─── SECTION ─── */
+.section {
+  margin-bottom: 4rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--gold);
+  letter-spacing: 0.2em;
+}
+
+.section-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.05em;
+}
+
+.section-desc {
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--muted);
+  margin-top: -1.2rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+/* ─── OVERVIEW STATS ─── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.stat-card {
+  background: var(--bg-dark);
+  color: var(--paper);
+  padding: 1.25rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+}
+
+.stat-number {
+  font-family: 'Cinzel', serif;
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--gold-light);
+  line-height: 1;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  color: rgba(250,247,242,0.5);
+  text-transform: uppercase;
+}
+
+/* ─── SUBDOMAIN LAYER STACK ─── */
+.layer-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.layer-card {
+  display: grid;
+  grid-template-columns: 3.5rem 1fr auto;
+  align-items: stretch;
+  border: 1px solid var(--border);
+  border-bottom: none;
+  background: white;
+  transition: background 0.2s;
+  position: relative;
+}
+.layer-card:last-child { border-bottom: 1px solid var(--border); }
+.layer-card:hover { background: var(--bg-card); }
+
+.layer-num {
+  background: var(--bg-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  padding: 1rem 0;
+  border-right: 1px solid var(--border-dark);
+}
+
+.layer-body {
+  padding: 1.2rem 1.5rem;
+}
+
+.layer-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.35rem;
+}
+
+.layer-desc {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-bottom: 0.6rem;
+}
+
+.layer-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  padding: 0.15rem 0.5rem;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  background: transparent;
+}
+
+.layer-status {
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  border-left: 1px solid var(--border);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+}
+.status-dot.in-progress { background: var(--teal-light); }
+.status-dot.complete { background: var(--gold); }
+
+/* ─── REFERENCE LINK GRID ─── */
+.ref-domain-block {
+  margin-bottom: 2.5rem;
+}
+
+.ref-domain-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--bg-dark);
+  padding: 0.4rem 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.ref-domain-label .domain-id {
+  color: var(--gold);
+}
+
+.ref-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 0.6rem;
+}
+
+.ref-link {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  background: white;
+  text-decoration: none;
+  color: var(--ink);
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.ref-link::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--gold);
+  transform: scaleY(0);
+  transition: transform 0.2s;
+}
+
+.ref-link:hover {
+  background: var(--bg-card);
+  border-color: var(--gold-dim);
+}
+.ref-link:hover::before { transform: scaleY(1); }
+
+.ref-icon {
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  margin-top: 0.05rem;
+  opacity: 0.4;
+}
+
+.ref-text {}
+
+.ref-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 0.2rem;
+}
+
+.ref-url {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 300;
+  color: var(--muted);
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+.ref-type {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.1rem 0.35rem;
+  margin-top: 0.3rem;
+  display: inline-block;
+}
+.ref-type.primary { background: rgba(184,150,62,0.12); color: var(--gold-dim); border: 1px solid rgba(184,150,62,0.3); }
+.ref-type.reference { background: rgba(26,92,82,0.08); color: var(--teal); border: 1px solid rgba(26,92,82,0.2); }
+.ref-type.archive { background: rgba(74,48,96,0.08); color: var(--accent-purple); border: 1px solid rgba(74,48,96,0.2); }
+.ref-type.tool { background: rgba(30,58,95,0.08); color: var(--accent-blue); border: 1px solid rgba(30,58,95,0.2); }
+
+/* ─── CRITICAL SYNTHESIS POINTS ─── */
+.csp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.csp-card {
+  border: 1px solid var(--border);
+  padding: 1.75rem;
+  position: relative;
+  overflow: hidden;
+  background: white;
+}
+
+.csp-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+.csp-card:nth-child(1)::after { background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+.csp-card:nth-child(2)::after { background: linear-gradient(90deg, var(--teal), var(--teal-light)); }
+.csp-card:nth-child(3)::after { background: linear-gradient(90deg, var(--accent-purple), #7b5ea7); }
+
+.csp-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.25em;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+}
+
+.csp-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.csp-bridge {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.85rem;
+}
+
+.csp-node {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.csp-arrow {
+  font-size: 0.8rem;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+
+.csp-desc {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+}
+
+.csp-strength {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.csp-strength.emerging { color: var(--teal); }
+.csp-strength.philosophical { color: var(--accent-purple); }
+.csp-strength.novel { color: var(--gold-dim); }
+
+/* ─── KNOWLEDGE GRAPH VISUAL ─── */
+.graph-container {
+  background: var(--bg-dark);
+  border: 1px solid var(--border-dark);
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  min-height: 420px;
+}
+
+.graph-container canvas {
+  display: block;
+  width: 100%;
+  cursor: grab;
+}
+
+.graph-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  color: rgba(250,247,242,0.5);
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.graph-instruction {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  color: rgba(250,247,242,0.25);
+  letter-spacing: 0.1em;
+}
+
+/* ─── BUILD SEQUENCE ─── */
+.build-sequence {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  counter-reset: seq;
+}
+
+.seq-item {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr;
+  border: 1px solid var(--border);
+  border-bottom: none;
+  background: white;
+  transition: background 0.2s;
+}
+.seq-item:last-child { border-bottom: 1px solid var(--border); }
+.seq-item:hover { background: var(--bg-card); }
+
+.seq-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: var(--gold);
+  border-right: 1px solid var(--border);
+  padding: 1rem 0;
+}
+
+.seq-body {
+  padding: 1rem 1.25rem;
+}
+
+.seq-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.3rem;
+}
+
+.seq-why {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--bg-dark);
+  color: rgba(250,247,242,0.45);
+  padding: 2.5rem 2rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  position: relative;
+}
+
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+footer a {
+  color: var(--gold-dim);
+  text-decoration: none;
+}
+footer a:hover { color: var(--gold-light); }
+
+/* ─── HIDDEN (search filter) ─── */
+.ref-link.hidden,
+.ref-domain-block.hidden { display: none; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 640px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .ref-grid { grid-template-columns: 1fr; }
+  .csp-grid { grid-template-columns: 1fr; }
+  .layer-card { grid-template-columns: 2.5rem 1fr; }
+  .layer-status { display: none; }
+}
+
+/* ─── ANIMATIONS ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.header-inner > * {
+  animation: fadeUp 0.6s ease both;
+}
+.header-eyebrow { animation-delay: 0.05s; }
+.header-title   { animation-delay: 0.15s; }
+.header-subtitle{ animation-delay: 0.25s; }
+.header-meta    { animation-delay: 0.35s; }
+
+.stat-card {
+  animation: fadeUp 0.5s ease both;
+}
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.15s; }
+.stat-card:nth-child(3) { animation-delay: 0.2s; }
+.stat-card:nth-child(4) { animation-delay: 0.25s; }
+.stat-card:nth-child(5) { animation-delay: 0.3s; }
+.stat-card:nth-child(6) { animation-delay: 0.35s; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     HEADER
+═══════════════════════════════════════════ -->
+<header>
+  <div class="header-inner">
+    <div class="header-eyebrow">Grand Synthesis · Domain 9 of 9 · Digital Archive & Web Synthesis</div>
+    <h1 class="header-title">The Technical Spine</h1>
+    <div class="header-subtitle">GitHub Modules · CMS Architecture · Knowledge Graph · Unified Theory Hub</div>
+    <p style="font-size:0.95rem;font-style:italic;color:rgba(250,247,242,0.6);max-width:680px;line-height:1.7;">
+      Domain 9 is the always-on layer connecting all eight domains into a single navigable synthesis.
+      It runs in parallel across all three phases — never waiting, never stopping.
+    </p>
+    <div class="header-meta">
+      <div class="meta-pill">Phase <span>Always-on</span></div>
+      <div class="meta-pill">Subdomains <span>6 (SD 54–59)</span></div>
+      <div class="meta-pill">URLs indexed <span>60+</span></div>
+      <div class="meta-pill">Status <span style="color:#e8956a;">Not started — Build ready</span></div>
+      <div class="meta-pill">Primary <span><a href="https://unifiedtheory.culturalmusings.com/" target="_blank" rel="noopener" style="color:var(--gold-light);text-decoration:none;">unifiedtheory.culturalmusings.com</a></span></div>
+    </div>
+  </div>
+  <div class="header-gold-line"></div>
+</header>
+
+<!-- ═══════════════════════════════════════════
+     SEARCH
+═══════════════════════════════════════════ -->
+<div class="search-wrap">
+  <div class="search-inner">
+    <input type="search" class="search-input" id="searchInput" placeholder="Search references, domains, topics…" autocomplete="off">
+    <span class="search-count" id="searchCount">60+ references</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     NAV TABS
+═══════════════════════════════════════════ -->
+<nav class="nav-tabs" aria-label="Page sections">
+  <div class="nav-tabs-inner">
+    <a class="nav-tab active" href="#overview">Overview</a>
+    <a class="nav-tab" href="#subdomains">Subdomains</a>
+    <a class="nav-tab" href="#synthesis-hub">Synthesis Hub</a>
+    <a class="nav-tab" href="#natya-shastra">Natya Shastra</a>
+    <a class="nav-tab" href="#vedic-texts">Vedic Texts</a>
+    <a class="nav-tab" href="#sound-ragas">Sound & Ragas</a>
+    <a class="nav-tab" href="#consciousness">Consciousness</a>
+    <a class="nav-tab" href="#geometry">Geometry</a>
+    <a class="nav-tab" href="#medical">Medical</a>
+    <a class="nav-tab" href="#github">GitHub</a>
+    <a class="nav-tab" href="#csp">Critical Synthesis</a>
+    <a class="nav-tab" href="#build-sequence">Build Sequence</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     MAIN
+═══════════════════════════════════════════ -->
+<main>
+
+  <!-- OVERVIEW -->
+  <section class="section" id="overview">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-number">9</span>
+        <span class="stat-label">Primary Domains</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">54</span>
+        <span class="stat-label">Subdomains Total</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">60+</span>
+        <span class="stat-label">Reference URLs</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">12</span>
+        <span class="stat-label">Live Subdomains</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">26+</span>
+        <span class="stat-label">Weeks Build</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">3</span>
+        <span class="stat-label">Synthesis Points</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SUBDOMAINS -->
+  <section class="section" id="subdomains">
+    <div class="section-header">
+      <span class="section-number">SD 54–59</span>
+      <h2 class="section-title">Domain 9 — Six Subdomains</h2>
+    </div>
+    <p class="section-desc">The six technical layers that connect all eight domains into one navigable synthesis. Build in sequence; operate in parallel.</p>
+    <div class="layer-stack">
+      <div class="layer-card">
+        <div class="layer-num">SD54</div>
+        <div class="layer-body">
+          <div class="layer-title">GitHub Repository Modules</div>
+          <div class="layer-desc">All repos at ramachandra1975 — documentation, versioning, module map, contribution guide, GitHub Pages.</div>
+          <div class="layer-tags">
+            <span class="tag">github</span><span class="tag">repos</span><span class="tag">documentation</span><span class="tag">versioning</span><span class="tag">module-map</span>
+          </div>
+        </div>
+        <div class="layer-status"><div class="status-dot"></div></div>
+      </div>
+      <div class="layer-card">
+        <div class="layer-num">SD55</div>
+        <div class="layer-body">
+          <div class="layer-title">Subdomain CMS Architecture</div>
+          <div class="layer-desc">12 culturalmusings.com subdomains — unified navigation, shared CSS, cross-subdomain sitemap, internal linking protocol.</div>
+          <div class="layer-tags">
+            <span class="tag">cms</span><span class="tag">navigation</span><span class="tag">12-subdomains</span><span class="tag">unified-ux</span>
+          </div>
+        </div>
+        <div class="layer-status"><div class="status-dot"></div></div>
+      </div>
+      <div class="layer-card">
+        <div class="layer-num">SD56</div>
+        <div class="layer-body">
+          <div class="layer-title">Reference Site Harvesting</div>
+          <div class="layer-desc">60+ URLs indexed, tagged by domain and subdomain, annotated for quality, searchable from unified hub.</div>
+          <div class="layer-tags">
+            <span class="tag">reference-index</span><span class="tag">60-urls</span><span class="tag">searchable</span><span class="tag">api</span>
+          </div>
+        </div>
+        <div class="layer-status"><div class="status-dot"></div></div>
+      </div>
+      <div class="layer-card">
+        <div class="layer-num">SD57</div>
+        <div class="layer-body">
+          <div class="layer-title">Cross-Domain Knowledge Graph</div>
+          <div class="layer-desc">54 nodes (one per subdomain) + cross-domain edges. Three critical synthesis point edges seeded first. D3.js explorer.</div>
+          <div class="layer-tags">
+            <span class="tag">knowledge-graph</span><span class="tag">d3js</span><span class="tag">nodes</span><span class="tag">edges</span><span class="tag">54-subdomains</span>
+          </div>
+        </div>
+        <div class="layer-status"><div class="status-dot"></div></div>
+      </div>
+      <div class="layer-card">
+        <div class="layer-num">SD58</div>
+        <div class="layer-body">
+          <div class="layer-title">Multiverse Knowledge Base Indexing</div>
+          <div class="layer-desc">Full-text search across all 54 subdomains, 60+ URLs, 200+ deliverables, and all open questions. Lunr.js or Algolia.</div>
+          <div class="layer-tags">
+            <span class="tag">knowledge-base</span><span class="tag">full-text-search</span><span class="tag">lunrjs</span><span class="tag">gap-register</span>
+          </div>
+        </div>
+        <div class="layer-status"><div class="status-dot"></div></div>
+      </div>
+      <div class="layer-card">
+        <div class="layer-num">SD59</div>
+        <div class="layer-body">
+          <div class="layer-title">Unified Theory Landing & Synthesis Hub</div>
+          <div class="layer-desc">The grand convergence point — unifiedtheory.culturalmusings.com — built last, once graph and index are populated.</div>
+          <div class="layer-tags">
+            <span class="tag">unified-theory</span><span class="tag">synthesis-hub</span><span class="tag">grand-convergence</span><span class="tag">final-deliverable</span>
+          </div>
+        </div>
+        <div class="layer-status"><div class="status-dot"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SYNTHESIS HUB — culturalmusings network -->
+  <section class="section" id="synthesis-hub">
+    <div class="section-header">
+      <span class="section-number">D9 · SD55 + SD59</span>
+      <h2 class="section-title">Synthesis Hub & Subdomain Network</h2>
+    </div>
+    <p class="section-desc">The 12 live or in-progress culturalmusings.com subdomains — the presentation layer of the Grand Synthesis.</p>
+    <div class="ref-domain-block">
+      <div class="ref-domain-label"><span class="domain-id">D9</span> Primary Hub</div>
+      <div class="ref-grid">
+        <a href="https://unifiedtheory.culturalmusings.com/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">⬡</span>
+          <div class="ref-text">
+            <div class="ref-title">Unified Theory Hub</div>
+            <div class="ref-url">unifiedtheory.culturalmusings.com</div>
+            <span class="ref-type primary">Grand Convergence</span>
+          </div>
+        </a>
+        <a href="https://culturalmusings.com/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">⬡</span>
+          <div class="ref-text">
+            <div class="ref-title">Cultural Musings — Main Domain</div>
+            <div class="ref-url">culturalmusings.com</div>
+            <span class="ref-type primary">Main Domain</span>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="ref-domain-block">
+      <div class="ref-domain-label"><span class="domain-id">D2</span> Natya Shastra Subdomains</div>
+      <div class="ref-grid">
+        <a href="https://natyashastra.culturalmusings.com/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">◈</span>
+          <div class="ref-text">
+            <div class="ref-title">Natya Shastra — Primary Site</div>
+            <div class="ref-url">natyashastra.culturalmusings.com</div>
+            <span class="ref-type primary">Primary</span>
+          </div>
+        </a>
+        <a href="https://karanasrootmap.culturalmusings.com/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">◈</span>
+          <div class="ref-text">
+            <div class="ref-title">Karanas Root Map</div>
+            <div class="ref-url">karanasrootmap.culturalmusings.com</div>
+            <span class="ref-type primary">In Progress</span>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="ref-domain-block">
+      <div class="ref-domain-label"><span class="domain-id">D1</span> Sacred Geometry</div>
+      <div class="ref-grid">
+        <a href="https://vedicmathematicsgeometry.culturalmusings.com/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">△</span>
+          <div class="ref-text">
+            <div class="ref-title">Vedic Mathematics & Geometry</div>
+            <div class="ref-url">vedicmathematicsgeometry.culturalmusings.com</div>
+            <span class="ref-type primary">Domain Exists</span>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="ref-domain-block">
+      <div class="ref-domain-label"><span class="domain-id">D4 + D7</span> Sound & Medical</div>
+      <div class="ref-grid">
+        <a href="https://nada-chikitsa.culturalmusings.com/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">♩</span>
+          <div class="ref-text">
+            <div class="ref-title">Nada Chikitsa — Sound Therapy</div>
+            <div class="ref-url">nada-chikitsa.culturalmusings.com</div>
+            <span class="ref-type primary">Site Exists</span>
+          </div>
+        </a>
+        <a href="https://bioresonancemusings.culturalmusings.com/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">∿</span>
+          <div class="ref-text">
+            <div class="ref-title">Bio-Resonance Musings</div>
+            <div class="ref-url">bioresonancemusings.culturalmusings.com</div>
+            <span class="ref-type primary">Site Exists</span>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="ref-domain-block">
+      <div class="ref-domain-label"><span class="domain-id">D5 + D6</span> Consciousness & Karma</div>
+      <div class="ref-grid">
+        <a href="https://masterconsciousprotocol.culturalmusings.com/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">◉</span>
+          <div class="ref-text">
+            <div class="ref-title">Master Consciousness Protocol</div>
+            <div class="ref-url">masterconsciousprotocol.culturalmusings.com</div>
+            <span class="ref-type primary">In Progress</span>
+          </div>
+        </a>
+        <a href="https://completecelestialsynthesis.culturalmusings.com/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">✦</span>
+          <div class="ref-text">
+            <div class="ref-title">Complete Celestial Synthesis</div>
+            <div class="ref-url">completecelestialsynthesis.culturalmusings.com</div>
+            <span class="ref-type primary">Conceptual</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- NATYA SHASTRA REFERENCES -->
+  <section class="section" id="natya-shastra">
+    <div class="section-header">
+      <span class="section-number">D2 · SD07–12</span>
+      <h2 class="section-title">Natya Shastra — External References</h2>
+    </div>
+    <p class="section-desc">Primary scholarly and archival sources for the 108 Karanas, Mudras, and Bharata Muni's 36 chapters.</p>
+    <div class="ref-domain-block">
+      <div class="ref-grid">
+        <a href="https://www.exoticindiaart.com/article/the-108-poses-of-shiva-tandava-in-natya-shastra" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">◈</span>
+          <div class="ref-text">
+            <div class="ref-title">108 Poses of Shiva Tandava in Natya Shastra</div>
+            <div class="ref-url">exoticindiaart.com</div>
+            <span class="ref-type reference">Reference</span>
+          </div>
+        </a>
+        <a href="https://cdn.angkordatabase.asia/libs/docs/publications/dance-imagery-in-south-indian-temples-study-of-the-108-karana-sculptures/108-karanas.pdf" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">◈</span>
+          <div class="ref-text">
+            <div class="ref-title">Dance Imagery in South Indian Temples — 108 Karana Sculptures (PDF)</div>
+            <div class="ref-url">cdn.angkordatabase.asia · PDF</div>
+            <span class="ref-type archive">Archive / PDF</span>
+          </div>
+        </a>
+        <a href="https://en-wikipedia--on--ipfs-org.ipns.dweb.link/wiki/List_of_mudras_%28dance%29" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">◈</span>
+          <div class="ref-text">
+            <div class="ref-title">List of Mudras (Dance) — IPFS Wikipedia Mirror</div>
+            <div class="ref-url">en-wikipedia--on--ipfs-org.ipns.dweb.link</div>
+            <span class="ref-type reference">Reference</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- VEDIC TEXTS -->
+  <section class="section" id="vedic-texts">
+    <div class="section-header">
+      <span class="section-number">D3 · SD13–18</span>
+      <h2 class="section-title">Vedic Texts & Philosophical Archives</h2>
+    </div>
+    <p class="section-desc">Primary text repositories, Shankaracharya lineage archives, Vedic encyclopaedias, and Sanskrit document collections.</p>
+
+    <div class="ref-domain-block">
+      <div class="ref-domain-label"><span class="domain-id">D3</span> Official & Institutional</div>
+      <div class="ref-grid">
+        <a href="https://vedicheritage.gov.in/introduction/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">⊛</span>
+          <div class="ref-text">
+            <div class="ref-title">Vedic Heritage — Government of India</div>
+            <div class="ref-url">vedicheritage.gov.in/introduction</div>
+            <span class="ref-type primary">Official</span>
+          </div>
+        </a>
+        <a href="https://hindupedia.com/en/Veda" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">⊛</span>
+          <div class="ref-text">
+            <div class="ref-title">Hindupedia — Veda</div>
+            <div class="ref-url">hindupedia.com/en/Veda</div>
+            <span class="ref-type reference">Encyclopaedia</span>
+          </div>
+        </a>
+        <a href="https://veda.harekrsna.cz/encyclopedia/scriptures.htm" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">⊛</span>
+          <div class="ref-text">
+            <div class="ref-title">Vedic Encyclopaedia — Scriptures</div>
+            <div class="ref-url">veda.harekrsna.cz/encyclopedia/scriptures.htm</div>
+            <span class="ref-type reference">Encyclopaedia</span>
+          </div>
+        </a>
+        <a href="https://hindumediawiki.com/story.php?id=821" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">⊛</span>
+          <div class="ref-text">
+            <div class="ref-title">Hindu Media Wiki</div>
+            <div class="ref-url">hindumediawiki.com/story.php?id=821</div>
+            <span class="ref-type reference">Reference</span>
+          </div>
+        </a>
+        <a href="https://www.vedadhara.com/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">⊛</span>
+          <div class="ref-text">
+            <div class="ref-title">Vedadhara</div>
+            <div class="ref-url">vedadhara.com</div>
+            <span class="ref-type reference">Reference</span>
+          </div>
+        </a>
+        <a href="https://vedapurana.org/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">⊛</span>
+          <div class="ref-text">
+            <div class="ref-title">Veda Purana</div>
+            <div class="ref-url">vedapurana.org</div>
+            <span class="ref-type reference">Reference</span>
+          </div>
+        </a>
+        <a href="https://sanskritdocuments.org/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">⊛</span>
+          <div class="ref-text">
+            <div class="ref-title">Sanskrit Documents</div>
+            <div class="ref-url">sanskritdocuments.org</div>
+            <span class="ref-type reference">Primary Source</span>
+          </div>
+        </a>
+        <a href="https://www.wisdomlib.org/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">⊛</span>
+          <div class="ref-text">
+            <div class="ref-title">Wisdom Library</div>
+            <div class="ref-url">wisdomlib.org</div>
+            <span class="ref-type reference">Reference</span>
+          </div>
+        </a>
+        <a href="https://www.veducation.world/library" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">⊛</span>
+          <div class="ref-text">
+            <div class="ref-title">Veducation World Library</div>
+            <div class="ref-url">veducation.world/library</div>
+            <span class="ref-type reference">Library</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="ref-domain-block">
+      <div class="ref-domain-label"><span class="domain-id">D3 D5</span> Shankaracharya & Advaita Archives</div>
+      <div class="ref-grid">
+        <a href="https://archive.org/details/CompleteWorksOfSriSankaracharyaIn20Volumes1910Edition/WorksOfSriSankaracharya01-Brahmasutra1/page/n209/mode/2up" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">⊞</span>
+          <div class="ref-text">
+            <div class="ref-title">Complete Works of Sri Sankaracharya — 20 Volumes (1910)</div>
+            <div class="ref-url">archive.org — Brahmasutra Vol. 1</div>
+            <span class="ref-type archive">Archive.org</span>
+          </div>
+        </a>
+        <a href="https://hinduebooks.blogspot.com/2010/08/works-of-sri-sankaracharya-sanskrit-20.html" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">⊞</span>
+          <div class="ref-text">
+            <div class="ref-title">Works of Sri Sankaracharya — Sanskrit (20 Volumes)</div>
+            <div class="ref-url">hinduebooks.blogspot.com</div>
+            <span class="ref-type archive">Archive</span>
+          </div>
+        </a>
+        <a href="https://krishna2.com/2019-books-shankaracharya.html" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">⊞</span>
+          <div class="ref-text">
+            <div class="ref-title">Shankaracharya Books Collection (2019)</div>
+            <div class="ref-url">krishna2.com</div>
+            <span class="ref-type archive">Archive</span>
+          </div>
+        </a>
+        <a href="https://ramanisblog.in/2015/08/02/shankar-mutts-by-shankaracharya-four-vedas/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">⊞</span>
+          <div class="ref-text">
+            <div class="ref-title">Shankar Mutts by Shankaracharya — Four Vedas</div>
+            <div class="ref-url">ramanisblog.in</div>
+            <span class="ref-type reference">Reference</span>
+          </div>
+        </a>
+        <a href="https://openlibrary.org/subjects/advaita" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">⊞</span>
+          <div class="ref-text">
+            <div class="ref-title">Open Library — Advaita Subject Collection</div>
+            <div class="ref-url">openlibrary.org/subjects/advaita</div>
+            <span class="ref-type archive">Open Library</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="ref-domain-block">
+      <div class="ref-domain-label"><span class="domain-id">D3 D4</span> Tantra, Mantra & Stotras</div>
+      <div class="ref-grid">
+        <a href="https://shlokam.org/shloka/rudram-namakam.htm" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">♦</span>
+          <div class="ref-text">
+            <div class="ref-title">Rudram Namakam — Shlokam</div>
+            <div class="ref-url">shlokam.org/shloka/rudram-namakam.htm</div>
+            <span class="ref-type primary">Primary Text</span>
+          </div>
+        </a>
+        <a href="https://www.medhajournal.com/rudram-chamakam-an-original-explanation/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">♦</span>
+          <div class="ref-text">
+            <div class="ref-title">Rudram Chamakam — An Original Explanation</div>
+            <div class="ref-url">medhajournal.com</div>
+            <span class="ref-type reference">Scholarly</span>
+          </div>
+        </a>
+        <a href="https://shlokam.org/shloka/lalitha-sahasranamam.htm" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">♦</span>
+          <div class="ref-text">
+            <div class="ref-title">Lalitha Sahasranamam — Shlokam</div>
+            <div class="ref-url">shlokam.org/shloka/lalitha-sahasranamam.htm</div>
+            <span class="ref-type primary">Primary Text</span>
+          </div>
+        </a>
+        <a href="http://isatsang.blogspot.com/2013/05/sri-lalitha-sahasranamam-with-meaning.html" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">♦</span>
+          <div class="ref-text">
+            <div class="ref-title">Sri Lalitha Sahasranamam with Meaning</div>
+            <div class="ref-url">isatsang.blogspot.com</div>
+            <span class="ref-type reference">Commentary</span>
+          </div>
+        </a>
+        <a href="https://www.sanskrit.nic.in/books_archive/024_Shri_Lalita_Sahasra_Name_of_Shri_Ramamurti.pdf" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">♦</span>
+          <div class="ref-text">
+            <div class="ref-title">Shri Lalita Sahasra Nama — Sanskrit.nic.in (PDF)</div>
+            <div class="ref-url">sanskrit.nic.in · Official PDF</div>
+            <span class="ref-type primary">Official PDF</span>
+          </div>
+        </a>
+        <a href="https://www.kamakoti.org/kamakoti/details/naradapurana12.html" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">♦</span>
+          <div class="ref-text">
+            <div class="ref-title">Narada Purana — Kamakoti.org</div>
+            <div class="ref-url">kamakoti.org/kamakoti/details/naradapurana12.html</div>
+            <span class="ref-type reference">Purana</span>
+          </div>
+        </a>
+        <a href="https://www.kamakoti.org/kamakoti/details/skandapurana49.html" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">♦</span>
+          <div class="ref-text">
+            <div class="ref-title">Skanda Purana — Kamakoti.org</div>
+            <div class="ref-url">kamakoti.org/kamakoti/details/skandapurana49.html</div>
+            <span class="ref-type reference">Purana</span>
+          </div>
+        </a>
+        <a href="https://www.sujatanandy.com/the-nyasas-of-tantric-rituals/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">♦</span>
+          <div class="ref-text">
+            <div class="ref-title">The Nyasas of Tantric Rituals</div>
+            <div class="ref-url">sujatanandy.com</div>
+            <span class="ref-type reference">Tantra</span>
+          </div>
+        </a>
+        <a href="https://www.nathas.org/en/dictionary/matrika-nyasa/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">♦</span>
+          <div class="ref-text">
+            <div class="ref-title">Matrika Nyasa — Nathas Dictionary</div>
+            <div class="ref-url">nathas.org/en/dictionary/matrika-nyasa</div>
+            <span class="ref-type reference">Dictionary</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="ref-domain-block">
+      <div class="ref-domain-label"><span class="domain-id">D3</span> Additional Resources</div>
+      <div class="ref-grid">
+        <a href="https://mahakatha.com/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">⊛</span>
+          <div class="ref-text">
+            <div class="ref-title">Mahakatha</div>
+            <div class="ref-url">mahakatha.com</div>
+            <span class="ref-type reference">Reference</span>
+          </div>
+        </a>
+        <a href="https://vedyog.net/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">⊛</span>
+          <div class="ref-text">
+            <div class="ref-title">Vedyog</div>
+            <div class="ref-url">vedyog.net</div>
+            <span class="ref-type reference">Reference</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOUND & RAGAS -->
+  <section class="section" id="sound-ragas">
+    <div class="section-header">
+      <span class="section-number">D4 · SD19–24</span>
+      <h2 class="section-title">Sound, Vibration & Raga References</h2>
+    </div>
+    <p class="section-desc">Raga classification systems, Melakarta charts, bioacoustics, mantra science, and microtone physics.</p>
+    <div class="ref-domain-block">
+      <div class="ref-domain-label"><span class="domain-id">D4</span> Raga Classification & Theory</div>
+      <div class="ref-grid">
+        <a href="https://melakarta.com/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">♩</span>
+          <div class="ref-text">
+            <div class="ref-title">Melakarta Ragas and Chart</div>
+            <div class="ref-url">melakarta.com</div>
+            <span class="ref-type primary">Primary Tool</span>
+          </div>
+        </a>
+        <a href="https://ragajunglism.org/ragas" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">♩</span>
+          <div class="ref-text">
+            <div class="ref-title">Hindustani Raga Index — Rāga Junglism</div>
+            <div class="ref-url">ragajunglism.org/ragas</div>
+            <span class="ref-type reference">Index</span>
+          </div>
+        </a>
+        <a href="https://ragajunglism.org/ragas/masterlist" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">♩</span>
+          <div class="ref-text">
+            <div class="ref-title">Masterlist of Ragas (1000+) — Rāga Junglism</div>
+            <div class="ref-url">ragajunglism.org/ragas/masterlist</div>
+            <span class="ref-type reference">Master Index</span>
+          </div>
+        </a>
+        <a href="https://amitray.com/the-84-ragas-of-indian-classical-music-a-complete-guide" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">♩</span>
+          <div class="ref-text">
+            <div class="ref-title">The 84 Ragas of Indian Classical Music — A Complete Guide</div>
+            <div class="ref-url">amitray.com</div>
+            <span class="ref-type reference">Guide</span>
+          </div>
+        </a>
+        <a href="https://chromatone.center/theory/scales/raga" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">♩</span>
+          <div class="ref-text">
+            <div class="ref-title">Indian Raga — Chromatone Center</div>
+            <div class="ref-url">chromatone.center/theory/scales/raga</div>
+            <span class="ref-type reference">Theory</span>
+          </div>
+        </a>
+        <a href="https://computationalmusic.com/raga-classification-system.html" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">♩</span>
+          <div class="ref-text">
+            <div class="ref-title">Raga Classification System — Computational Music</div>
+            <div class="ref-url">computationalmusic.com</div>
+            <span class="ref-type tool">Tool</span>
+          </div>
+        </a>
+        <a href="https://ragamath.com/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">♩</span>
+          <div class="ref-text">
+            <div class="ref-title">RagaMath</div>
+            <div class="ref-url">ragamath.com</div>
+            <span class="ref-type tool">Tool</span>
+          </div>
+        </a>
+        <a href="https://web-harmonium.com/harmonium-notes" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">♩</span>
+          <div class="ref-text">
+            <div class="ref-title">Harmonium Notes: Sargam Guide</div>
+            <div class="ref-url">web-harmonium.com/harmonium-notes</div>
+            <span class="ref-type reference">Sargam</span>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="ref-domain-block">
+      <div class="ref-domain-label"><span class="domain-id">D4</span> Mantra Science</div>
+      <div class="ref-grid">
+        <a href="https://www.vedadhara.com/english-topics-mantra-shastra" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">♦</span>
+          <div class="ref-text">
+            <div class="ref-title">Mantra Shastra — Vedadhara</div>
+            <div class="ref-url">vedadhara.com/english-topics-mantra-shastra</div>
+            <span class="ref-type reference">Mantra</span>
+          </div>
+        </a>
+        <a href="https://github.com/Ishanoshada/Soundarya-Lahari-Mantra-Finder" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">♦</span>
+          <div class="ref-text">
+            <div class="ref-title">Soundarya Lahari Mantra Finder — GitHub</div>
+            <div class="ref-url">github.com/Ishanoshada/Soundarya-Lahari-Mantra-Finder</div>
+            <span class="ref-type tool">Tool / GitHub</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONSCIOUSNESS -->
+  <section class="section" id="consciousness">
+    <div class="section-header">
+      <span class="section-number">D5 · SD25–30</span>
+      <h2 class="section-title">Consciousness Studies References</h2>
+    </div>
+    <p class="section-desc">Advaita, Shunyavada, Kashmir Shaivism, sadhana platforms, and the three Acharya lineages.</p>
+    <div class="ref-domain-block">
+      <div class="ref-grid">
+        <a href="https://manblunder.com/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">◉</span>
+          <div class="ref-text">
+            <div class="ref-title">Manblunder — Tantra & Consciousness Deep-Dives</div>
+            <div class="ref-url">manblunder.com</div>
+            <span class="ref-type reference">Commentary</span>
+          </div>
+        </a>
+        <a href="https://www.opensadhaka.com/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">◉</span>
+          <div class="ref-text">
+            <div class="ref-title">Open Sadhaka</div>
+            <div class="ref-url">opensadhaka.com</div>
+            <span class="ref-type reference">Sadhana Platform</span>
+          </div>
+        </a>
+        <a href="https://parasakthifamily.org/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">◉</span>
+          <div class="ref-text">
+            <div class="ref-title">Parasakthifamily</div>
+            <div class="ref-url">parasakthifamily.org</div>
+            <span class="ref-type reference">Reference</span>
+          </div>
+        </a>
+        <a href="https://openlibrary.org/subjects/advaita" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">◉</span>
+          <div class="ref-text">
+            <div class="ref-title">Open Library — Advaita Collection</div>
+            <div class="ref-url">openlibrary.org/subjects/advaita</div>
+            <span class="ref-type archive">Open Library</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SACRED GEOMETRY -->
+  <section class="section" id="geometry">
+    <div class="section-header">
+      <span class="section-number">D1 · SD01–06</span>
+      <h2 class="section-title">Sacred Geometry & Khadgamala</h2>
+    </div>
+    <p class="section-desc">Sri Yantra, Vastu, Vedic mathematics, Khadgamala ritual maps and Sanskrit documents.</p>
+    <div class="ref-domain-block">
+      <div class="ref-grid">
+        <a href="https://en.wikipedia.org/wiki/Khadgamala" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">△</span>
+          <div class="ref-text">
+            <div class="ref-title">Khadgamala — Wikipedia</div>
+            <div class="ref-url">en.wikipedia.org/wiki/Khadgamala</div>
+            <span class="ref-type reference">Wikipedia</span>
+          </div>
+        </a>
+        <a href="https://sanskritdocuments.org/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">△</span>
+          <div class="ref-text">
+            <div class="ref-title">Sanskrit Documents</div>
+            <div class="ref-url">sanskritdocuments.org</div>
+            <span class="ref-type reference">Primary Source</span>
+          </div>
+        </a>
+        <a href="https://www.wisdomlib.org/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">△</span>
+          <div class="ref-text">
+            <div class="ref-title">Wisdom Library — Geometry Sections</div>
+            <div class="ref-url">wisdomlib.org</div>
+            <span class="ref-type reference">Reference</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEDICAL -->
+  <section class="section" id="medical">
+    <div class="section-header">
+      <span class="section-number">D7 · SD37–42</span>
+      <h2 class="section-title">Medical & Bio-Resonance References</h2>
+    </div>
+    <p class="section-desc">Nada Chikitsa clinical resources, Rudram acoustic science, and bio-resonance frequency research.</p>
+    <div class="ref-domain-block">
+      <div class="ref-grid">
+        <a href="https://www.medhajournal.com/rudram-chamakam-an-original-explanation/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">∿</span>
+          <div class="ref-text">
+            <div class="ref-title">Rudram Chamakam — Original Explanation (Medha Journal)</div>
+            <div class="ref-url">medhajournal.com</div>
+            <span class="ref-type reference">Scholarly</span>
+          </div>
+        </a>
+        <a href="https://www.wisdomlib.org/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">∿</span>
+          <div class="ref-text">
+            <div class="ref-title">Wisdom Library — Marma & Healing Sections</div>
+            <div class="ref-url">wisdomlib.org</div>
+            <span class="ref-type reference">Reference</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- GITHUB -->
+  <section class="section" id="github">
+    <div class="section-header">
+      <span class="section-number">D9 · SD54</span>
+      <h2 class="section-title">GitHub & Technical Resources</h2>
+    </div>
+    <p class="section-desc">Code repositories, digital tools, and document hosting for the Grand Synthesis technical spine.</p>
+    <div class="ref-domain-block">
+      <div class="ref-grid">
+        <a href="https://github.com/ramachandra1975" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">⌥</span>
+          <div class="ref-text">
+            <div class="ref-title">ramachandra1975 — GitHub Organisation</div>
+            <div class="ref-url">github.com/ramachandra1975</div>
+            <span class="ref-type tool">Code Spine</span>
+          </div>
+        </a>
+        <a href="https://github.com/Ishanoshada/Soundarya-Lahari-Mantra-Finder" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">⌥</span>
+          <div class="ref-text">
+            <div class="ref-title">Soundarya Lahari Mantra Finder</div>
+            <div class="ref-url">github.com/Ishanoshada/Soundarya-Lahari-Mantra-Finder</div>
+            <span class="ref-type tool">Tool</span>
+          </div>
+        </a>
+        <a href="https://docs.google.com/" target="_blank" rel="noopener" class="ref-link">
+          <span class="ref-icon">⌥</span>
+          <div class="ref-text">
+            <div class="ref-title">Google Docs — Working Documents</div>
+            <div class="ref-url">docs.google.com</div>
+            <span class="ref-type tool">Working Docs</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CRITICAL SYNTHESIS POINTS -->
+  <section class="section" id="csp">
+    <div class="section-header">
+      <span class="section-number">CSP 1–3</span>
+      <h2 class="section-title">Three Critical Synthesis Points</h2>
+    </div>
+    <p class="section-desc">The three cross-domain intersections that will produce the most novel scholarly contributions if resolved. Priority edges in the knowledge graph.</p>
+    <div class="csp-grid">
+      <div class="csp-card">
+        <div class="csp-id">CSP·01 · D4 ↔ D7</div>
+        <div class="csp-title">Raga–Biofrequency Clinical Correlation</div>
+        <div class="csp-bridge">
+          <span class="csp-node">Raga-Rasa Matrix</span>
+          <span class="csp-arrow">⟷</span>
+          <span class="csp-node">Bio-Resonance Freq.</span>
+        </div>
+        <div class="csp-desc">Mapping the 72 Melakarta ragas against documented Hz frequency ranges and their physiological effects — the first comprehensive cross-reference of its kind.</div>
+        <div class="csp-strength emerging">Hypothesis strength: Emerging</div>
+      </div>
+      <div class="csp-card">
+        <div class="csp-id">CSP·02 · D5 ↔ D4</div>
+        <div class="csp-title">Spanda Doctrine and Quantum Vibration Theory</div>
+        <div class="csp-bridge">
+          <span class="csp-node">Spanda Doctrine</span>
+          <span class="csp-arrow">⟷</span>
+          <span class="csp-node">Nada Brahma</span>
+        </div>
+        <div class="csp-desc">Kashmir Shaivism's Spanda concept — consciousness as vibration — mapped carefully onto quantum field theory. Comparative study only; gaps clearly annotated.</div>
+        <div class="csp-strength philosophical">Hypothesis strength: Philosophical</div>
+      </div>
+      <div class="csp-card">
+        <div class="csp-id">CSP·03 · D1 ↔ D2</div>
+        <div class="csp-title">Khadgamala Geometry onto 108 Karanas</div>
+        <div class="csp-bridge">
+          <span class="csp-node">Khadgamala</span>
+          <span class="csp-arrow">⟷</span>
+          <span class="csp-node">108 Karanas</span>
+        </div>
+        <div class="csp-desc">Mapping Khadgamala spatial stations onto the 108 Karana body positions — a unified body-space-divine geometry. A genuinely novel scholarly contribution.</div>
+        <div class="csp-strength novel">Hypothesis strength: Novel scholarly</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KNOWLEDGE GRAPH (canvas) -->
+  <section class="section" id="knowledge-graph">
+    <div class="section-header">
+      <span class="section-number">D9 · SD57</span>
+      <h2 class="section-title">Knowledge Graph — Live Seed</h2>
+    </div>
+    <p class="section-desc">9 domain nodes with 15 cross-domain edges. Hover to inspect. The three critical synthesis point edges are highlighted in gold.</p>
+    <div class="graph-container">
+      <canvas id="graphCanvas" height="380"></canvas>
+      <div class="graph-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#b8963e"></div>Critical synthesis edge</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#2e9e8a"></div>Cross-domain edge</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#4a3060"></div>Phase 2 domain</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#1a5c52"></div>Phase 1 domain</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#1e3a5f"></div>Phase 3 / D9</div>
+      </div>
+      <div class="graph-instruction">hover nodes to inspect · edges shown schematically</div>
+    </div>
+  </section>
+
+  <!-- BUILD SEQUENCE -->
+  <section class="section" id="build-sequence">
+    <div class="section-header">
+      <span class="section-number">D9 · Execution</span>
+      <h2 class="section-title">Recommended Build Sequence</h2>
+    </div>
+    <p class="section-desc">Initialise Domain 9 immediately — even while building Domains 1–8. The sequence allows progressive publishing so partially-complete work is always navigable.</p>
+    <div class="build-sequence">
+      <div class="seq-item">
+        <div class="seq-num">1</div>
+        <div class="seq-body">
+          <div class="seq-title">SD54 — GitHub Repository Modules</div>
+          <div class="seq-why">Establish the code spine first. Everything else is built on top of this. Audit all repos at ramachandra1975 and create the org-level README.</div>
+        </div>
+      </div>
+      <div class="seq-item">
+        <div class="seq-num">2</div>
+        <div class="seq-body">
+          <div class="seq-title">SD55 — Subdomain CMS Architecture</div>
+          <div class="seq-why">Navigation must exist before content is published. Audit all 12 subdomains, design the shared navigation component, and build the shell.</div>
+        </div>
+      </div>
+      <div class="seq-item">
+        <div class="seq-num">3</div>
+        <div class="seq-body">
+          <div class="seq-title">SD56 — Reference Site Harvesting</div>
+          <div class="seq-why">Can be done in parallel with D1–8 builds. Generates immediate value. Compile all 60+ URLs into the tagged master index JSON.</div>
+        </div>
+      </div>
+      <div class="seq-item">
+        <div class="seq-num">4</div>
+        <div class="seq-body">
+          <div class="seq-title">SD57 — Cross-Domain Knowledge Graph</div>
+          <div class="seq-why">Seed with all 54 nodes immediately. Add cross-domain edges progressively as each domain completes. The three CSP edges go in first.</div>
+        </div>
+      </div>
+      <div class="seq-item">
+        <div class="seq-num">5</div>
+        <div class="seq-body">
+          <div class="seq-title">SD58 — Multiverse Knowledge Base Indexing</div>
+          <div class="seq-why">Build the schema early; populate progressively. The index grows as domains complete. Choose Lunr.js for fully static; Algolia for hosted search.</div>
+        </div>
+      </div>
+      <div class="seq-item">
+        <div class="seq-num">6</div>
+        <div class="seq-body">
+          <div class="seq-title">SD59 — Unified Theory Hub</div>
+          <div class="seq-why">The culmination. Build last, once the knowledge graph and index are sufficiently populated. This is the grand convergence document.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════ -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      Grand Synthesis · Domain 9 · Digital Archive &amp; Web Synthesis ·
+      <a href="https://culturalmusings.com/" target="_blank" rel="noopener">culturalmusings.com</a>
+    </div>
+    <div>
+      <a href="https://github.com/ramachandra1975" target="_blank" rel="noopener">github.com/ramachandra1975</a>
+      · <a href="https://unifiedtheory.culturalmusings.com/" target="_blank" rel="noopener">unifiedtheory.culturalmusings.com</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ─── SEARCH ─── */
+const searchInput = document.getElementById('searchInput');
+const searchCount = document.getElementById('searchCount');
+const allLinks = document.querySelectorAll('.ref-link');
+const allDomainBlocks = document.querySelectorAll('.ref-domain-block');
+
+function updateSearch() {
+  const q = searchInput.value.toLowerCase().trim();
+  let visible = 0;
+  allLinks.forEach(link => {
+    const text = link.textContent.toLowerCase();
+    const match = !q || text.includes(q);
+    link.classList.toggle('hidden', !match);
+    if (match) visible++;
+  });
+  allDomainBlocks.forEach(block => {
+    const hasVisible = [...block.querySelectorAll('.ref-link')].some(l => !l.classList.contains('hidden'));
+    block.classList.toggle('hidden', !hasVisible);
+  });
+  searchCount.textContent = q ? `${visible} result${visible !== 1 ? 's' : ''}` : '60+ references';
+}
+
+searchInput.addEventListener('input', updateSearch);
+
+/* ─── NAV TAB ACTIVE STATE ─── */
+const tabs = document.querySelectorAll('.nav-tab');
+const sections = document.querySelectorAll('section[id]');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      tabs.forEach(t => {
+        t.classList.toggle('active', t.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-30% 0px -60% 0px' });
+
+sections.forEach(s => observer.observe(s));
+
+/* ─── KNOWLEDGE GRAPH CANVAS ─── */
+(function() {
+  const canvas = document.getElementById('graphCanvas');
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width = canvas.offsetWidth * devicePixelRatio;
+    canvas.height = 380 * devicePixelRatio;
+    canvas.style.height = '380px';
+    ctx.scale(devicePixelRatio, devicePixelRatio);
+    draw();
+  }
+
+  const W = () => canvas.offsetWidth;
+  const H = 380;
+
+  const domains = [
+    { id:'D1', label:'D1\nGeometry',    x:0.18, y:0.22, color:'#1a5c52' },
+    { id:'D2', label:'D2\nNatya',       x:0.38, y:0.15, color:'#1a5c52' },
+    { id:'D3', label:'D3\nVedic',       x:0.60, y:0.18, color:'#1a5c52' },
+    { id:'D4', label:'D4\nSound',       x:0.78, y:0.35, color:'#4a3060' },
+    { id:'D5', label:'D5\nConsciousness',x:0.72, y:0.60, color:'#4a3060' },
+    { id:'D6', label:'D6\nKarma',       x:0.50, y:0.78, color:'#4a3060' },
+    { id:'D7', label:'D7\nMedical',     x:0.28, y:0.75, color:'#1e3a5f' },
+    { id:'D8', label:'D8\nCulture',     x:0.12, y:0.55, color:'#1e3a5f' },
+    { id:'D9', label:'D9\nDigital',     x:0.50, y:0.48, color:'#8b3a1e' },
+  ];
+
+  const edges = [
+    { a:'D1', b:'D2', csp:true },
+    { a:'D4', b:'D7', csp:true },
+    { a:'D5', b:'D4', csp:true },
+    { a:'D3', b:'D4', csp:false },
+    { a:'D3', b:'D7', csp:false },
+    { a:'D2', b:'D4', csp:false },
+    { a:'D5', b:'D3', csp:false },
+    { a:'D6', b:'D5', csp:false },
+    { a:'D6', b:'D3', csp:false },
+    { a:'D7', b:'D4', csp:false },
+    { a:'D1', b:'D9', csp:false },
+    { a:'D2', b:'D9', csp:false },
+    { a:'D3', b:'D9', csp:false },
+    { a:'D4', b:'D9', csp:false },
+    { a:'D5', b:'D9', csp:false },
+    { a:'D6', b:'D9', csp:false },
+    { a:'D7', b:'D9', csp:false },
+    { a:'D8', b:'D9', csp:false },
+  ];
+
+  let hovered = null;
+
+  function getPos(d) {
+    return { x: d.x * W(), y: d.y * H };
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W(), H);
+
+    // Edges
+    edges.forEach(e => {
+      const a = domains.find(d => d.id === e.a);
+      const b = domains.find(d => d.id === e.b);
+      const pa = getPos(a), pb = getPos(b);
+      ctx.beginPath();
+      ctx.moveTo(pa.x, pa.y);
+      ctx.lineTo(pb.x, pb.y);
+      const isHovered = hovered && (hovered.id === e.a || hovered.id === e.b);
+      if (e.csp) {
+        ctx.strokeStyle = isHovered ? '#e8c96a' : 'rgba(184,150,62,0.7)';
+        ctx.lineWidth = isHovered ? 2.5 : 1.5;
+        ctx.setLineDash([]);
+      } else if (e.a === 'D9' || e.b === 'D9') {
+        ctx.strokeStyle = isHovered ? 'rgba(139,58,30,0.9)' : 'rgba(139,58,30,0.35)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 4]);
+      } else {
+        ctx.strokeStyle = isHovered ? 'rgba(46,158,138,0.8)' : 'rgba(46,158,138,0.3)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([3, 5]);
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+    });
+
+    // Nodes
+    domains.forEach(d => {
+      const p = getPos(d);
+      const r = d.id === 'D9' ? 26 : 20;
+      const isHov = hovered && hovered.id === d.id;
+
+      // Glow
+      if (isHov) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r + 8, 0, Math.PI * 2);
+        ctx.fillStyle = d.color + '33';
+        ctx.fill();
+      }
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+      ctx.fillStyle = d.color;
+      ctx.fill();
+      ctx.strokeStyle = isHov ? '#e8c96a' : 'rgba(250,247,242,0.25)';
+      ctx.lineWidth = isHov ? 2 : 1;
+      ctx.stroke();
+
+      // Label
+      ctx.fillStyle = 'rgba(250,247,242,0.9)';
+      ctx.font = `700 ${d.id === 'D9' ? 10 : 9}px "JetBrains Mono", monospace`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      const lines = d.label.split('\n');
+      lines.forEach((line, i) => {
+        ctx.fillText(line, p.x, p.y + (i - (lines.length - 1) / 2) * 11);
+      });
+    });
+  }
+
+  canvas.addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    hovered = null;
+    domains.forEach(d => {
+      const p = getPos(d);
+      const r = d.id === 'D9' ? 26 : 20;
+      if (Math.hypot(mx - p.x, my - p.y) < r + 8) hovered = d;
+    });
+    canvas.style.cursor = hovered ? 'pointer' : 'default';
+    draw();
+  });
+
+  canvas.addEventListener('mouseleave', () => { hovered = null; draw(); });
+
+  window.addEventListener('resize', resize);
+  resize();
+})();
+</script>
+</body>
+</html>
